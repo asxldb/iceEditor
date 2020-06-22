@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>iceEditor-演示DEMO</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+</head>
+<body style="margin: 100px;">
+<div style="text-align: center;font-size:20px;margin-bottom: 20px;">演示DEMO</div>
+<div style="text-align: center;font-size:15px;margin-bottom: 20px;">官方：<a href="https://www.iceui.net/iceEditor.html" target="_blank">https://www.iceui.net/iceEditor.html</a></div>
+<textarea id="content"></textarea>
+<script type="text/JavaScript" src="iceEditor.js"></script>
+<script>
+ //自定义编辑器菜单
+var e = new ice.editor("content");
+e.uploadUrl="upload.php";
+e.screenshot = true;
+e.screenshotUpload = false;
+//edit.menu=['fontSize','foreColor','bold','italic','underline','strikeThrough','line','justifyLeft','justifyCenter','justifyRight','line','table','insertImage','video'];
+
+
+//下拉菜单类型
+e.plugin({
+	menu:'代码语言',
+		name:'codeLanguages',
+		dropdown:`
+			<div class="iceEditor-codeLanguages" style="padding:10px 20px;">
+				<div>iceCode代码高亮</div>
+				<select>
+					<option disabled selected>代码语言</option>
+					<option value ="html">HTML/XTML</option>
+					<option value ="css">CSS</option>
+					<option value ="js">JS</option>
+					<option value="php">PHP</option>
+					<option value="python">Python</option>
+					<option value="java">JAVA</option>
+					<option value="sql">SQL</option>
+					<option value="go">GO</option>
+					<option value="cpp">C++</option>
+					<option value="csharp">C#</option>
+					<option value="c">C</option>
+				</select>
+			</div>`,
+		success:function(e,z){
+			//获取content中的按钮
+			var select = e.getElementsByTagName('select')[0];
+			//设置点击事件
+			select.onchange=function(){
+				var str = z.getSelectHTML().replace(/<\s*\/p\s*>/ig,"\n").replace(/<[^>]+>/g,'').replace(/\n/g,'<br>').trim();
+				str = str.length?str:' ';
+				z.element.focus();
+				var range = z.range.getRangeAt(0);
+			　　　var frag = range.createContextualFragment('<pre class="iceCode:'+select.value+'">'+str+'</pre>');
+				var lastNode = frag.firstChild.lastChild;
+				range.insertNode(frag);
+				range.setStart(lastNode,0);
+				range.setEnd(lastNode,0);
+				range.collapse();
+				select.getElementsByTagName('option')[0].selected = true;
+			}	
+		}
+});
+
+//function方式
+e.plugin({
+	menu:'function方式',
+	name:'click',
+	click:function(e,z){
+		z.setText('hello world');
+	}
+});
+//execCommand命令
+e.plugin({
+	menu:'删除命令',
+	name:'del',
+	data:'delete'
+});
+//下拉菜单类型
+e.plugin({
+	menu:'下拉菜单',
+	name:'dropdown',
+	dropdown:'<div class="iceEditor-exec" data="copy" style="padding:10px 20px;">复制选中的文字</div>',
+});
+//弹出层类型
+e.plugin({
+	menu:'弹窗演示',
+	name:'popup',
+	style:'.demo-p{margin-bottom:10px}.demo-button{padding:0 10px}',
+	popup:{
+		width:230,
+		height:120,
+		title:'我是一个demo',
+		content:'<p class="demo-p">在光标处插入hello world!</p> <button class="demo-button" type="button">确定</button>',
+	},
+	success:function(e,z){
+		//获取content中的按钮
+		var btn = e.getElementsByTagName('button')[0];
+		//设置点击事件
+		btn.onclick=function(){
+			z.setText('hello world');
+			//关闭本弹窗
+			e.close()
+		}	
+	}
+});
+e.create();
+e.setValue(`<p>本实例js脚<del>本本<i>实例</i>js脚</del>本本实例js脚本：</p><p><br></p>
+<pre class="iceCode:js">asdfasdf<br>var str = 'hello world';<br>console.log(str);<br></pre>
+<p><br></p><p><font color="#00b050" size="2">//实例化（传递一个id）</font></p><p><font color="#595959" size="2">var edit = new ice.editor("content");</font></p><p><br></p><p><font color="#00b050" size="2">//自定义编辑器工具栏菜单（默认展示所有功能）</font></p><p><font color="#595959" size="2">edit.menu=["fontSize","foreColor","bold","italic","underline","strikeThrough","line","justifyLeft","justifyCenter","justifyRight","line","table","insertImage"];</font></p><p><br></p><p><font color="#00b050" size="2">//编辑器创建</font></p><p><font color="#595959" size="2">edit.create();</font></p>`);
+</script>
+
+</body>
+</html>
