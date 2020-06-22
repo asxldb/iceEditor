@@ -58,14 +58,14 @@ iceEditor.js的引用禁止放在head标签内，请尽量放在body中或body�
 #### 引入
 + 下载下来直接引入iceEditor.js即可，放在body中或body后面
 + 推荐引入下面的cdn加速链接
-+ CDN最新版：https://cdn.jsdelivr.net/gh/iceuinet/iceEditor/iceEditor.min.js
++ CDN最新版：https://cdn.jsdelivr.net/gh/iceuinet/iceEditor/src/iceEditor.min.js
 + 需要CDN历史版，请更改@后面的版本号，最低为1.1.6版本
-+ 历史版：https://cdn.jsdelivr.net/gh/iceuinet/iceEditor@1.1.6/iceEditor.min.js
++ 历史版：https://cdn.jsdelivr.net/gh/iceuinet/iceEditor@1.1.6/src/iceEditor.min.js
 
 #### 使用
 ```html
 <div id="editor"> 欢迎使用iceEditor富文本编辑器 </div>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/iceuinet/iceEditor/iceEditor.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/iceuinet/iceEditor/src/iceEditor.min.js"></script>
 ```
 ```javascript
 //第一步：创建实例化对象
