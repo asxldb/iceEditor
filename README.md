@@ -16,6 +16,14 @@ iceEditor官方群：324415936
 + 简约的唯美设计，简洁、极速
 
 #### 最新更新
+# iceEditor v1.1.7
++ **2020-07-27**
++ [修改] 将所有的语义标签、文字大小、颜色、粗体、删除线、斜体……全部改为span标签，使用style定义样式
++ [增加] 将当前光标位置样式，同步到菜单高亮上
++ [增加] ajax一系列配置项
++ **2020-07-25**
++ [修复] 源码视图下，p标签错位
++ [修复] 源码视图下，粘贴出现多余的p标签
 # iceEditor v1.1.6
 + **2020-07-02**
 + [优化] 鼠标经过功能按钮，弹出文字提示
@@ -49,11 +57,6 @@ iceEditor官方群：324415936
 + [新增] 截图直接上传至服务器功能，默认开启此功能，不需要可关闭，配置项：screenshotUpload
 + [重写] 图片、附件上传的核心方法，由iframe方式改为ajax
 + [修改] upload.php文件，支持存储截图的blob对象
-+ **2020-05-22**
-+ [修复] 拖拽编辑器的高度时，造成鼠标丢失焦点BUG
-+ **2020-05-18**
-+ [修复] 视频上传type未定义BUG
-+ [修复] 图片上传完成后造成的iframe为空报错
 + [查看其它更新](https://www.iceui.net/iceEditor/update.html) 
 
 #### 提示
@@ -173,6 +176,27 @@ e.screenshot=false;
 //禁用后，将默认以base64格式显示图片
 var e = new ice.editor('content');
 e.screenshotUpload=false;
+```
+
+
+#### ajax回调
+```javascript
+var e = new ice.editor('content');
+
+//ajax的xhr设置
+e.ajax.xhr = function(xhr,json,e){};  
+
+//ajax超时回调   
+e.ajax.timeout = function(xhr,json,e){};
+
+//ajax成功回调
+e.ajax.success = function(res,xhr,json,e){};
+
+//ajax失败回调
+e.ajax.error = function(res,xhr,json,e){};
+
+//ajax进度回调
+e.ajax.progress = function(percent,evt,xhr,json,e){};
 ```
 
 #### 插件开发
