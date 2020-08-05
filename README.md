@@ -21,6 +21,7 @@ iceEditor官方群：324415936
 + [修改] 将所有的语义标签、文字大小、颜色、粗体、删除线、斜体……全部改为span标签，使用style定义样式
 + [增加] 将当前光标位置样式，同步到菜单高亮上
 + [增加] ajax一系列配置项
++ [增加] 插入表情功能以及配置项
 + **2020-07-25**
 + [修复] 源码视图下，p标签错位
 + [修复] 源码视图下，粘贴出现多余的p标签
@@ -178,6 +179,94 @@ var e = new ice.editor('content');
 e.screenshotUpload=false;
 ```
 
+#### 配置插入表情的表情列表
+```javascript
+var e = new ice.editor('content');
+
+//type分两种，img和text，类型img为图片表情，content为图片的地址，类型text为文字表情，content为文字表情
+//以下是简单示例，收集于网络，由某网友整理，仅供参考，如有版权侵犯，请您及时联系我，QQ：308018629，我将及时处理！
+//如果您有推荐的开源免费的表情，可联系我或者进入官方QQ群324415936，我将表情内置到编辑器中
+e.face=[{
+    title: '新浪',
+    type: 'img',
+    list: [
+      {title:'嘻嘻',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/0b/tootha_thumb.gif'},
+      {title:'哈哈',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6a/laugh.gif'},
+      {title:'可爱',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/14/tza_thumb.gif'},
+      {title:'可怜',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/af/kl_thumb.gif'},
+      {title:'挖鼻屎',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/a0/kbsa_thumb.gif'},
+      {title:'吃惊',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f4/cj_thumb.gif'},
+      {title:'害羞',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6e/shamea_thumb.gif'},
+      {title:'挤眼',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c3/zy_thumb.gif'},
+      {title:'闭嘴',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/29/bz_thumb.gif'},
+      {title:'鄙视',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/71/bs2_thumb.gif'},
+      {title:'爱你',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6d/lovea_thumb.gif'},
+      {title:'泪',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/9d/sada_thumb.gif'},
+      {title:'偷笑',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/19/heia_thumb.gif'},
+      {title:'亲亲',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/8f/qq_thumb.gif'},
+      {title:'生病',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/b6/sb_thumb.gif'},
+      {title:'太开心',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/58/mb_thumb.gif'},
+      {title:'懒得理你',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/17/ldln_thumb.gif'},
+      {title:'右哼哼',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/98/yhh_thumb.gif'},
+      {title:'左哼哼',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6d/zhh_thumb.gif'},
+      {title:'嘘',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/a6/x_thumb.gif'},
+      {title:'衰',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/af/cry.gif'},
+      {title:'委屈',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/73/wq_thumb.gif'},
+      {title:'吐',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/9e/t_thumb.gif'},
+      {title:'打哈欠',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/f3/k_thumb.gif'},
+      {title:'抱抱',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/27/bba_thumb.gif'},
+      {title:'怒',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7c/angrya_thumb.gif'},
+      {title:'疑问',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/5c/yw_thumb.gif'},
+      {title:'馋嘴',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/a5/cza_thumb.gif'},
+      {title:'拜拜',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/70/88_thumb.gif'},
+      {title:'思考',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/e9/sk_thumb.gif'},
+      {title:'汗',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/24/sweata_thumb.gif'},
+      {title:'困',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/7f/sleepya_thumb.gif'},
+      {title:'睡觉',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6b/sleepa_thumb.gif'},
+      {title:'钱',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/90/money_thumb.gif'},
+      {title:'失望',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/0c/sw_thumb.gif'},
+      {title:'酷',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/40/cool_thumb.gif'},
+      {title:'花心',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/8c/hsa_thumb.gif'},
+      {title:'哼',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/49/hatea_thumb.gif'},
+      {title:'鼓掌',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/36/gza_thumb.gif'},
+      {title:'晕',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/d9/dizzya_thumb.gif'},
+      {title:'悲伤',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/1a/bs_thumb.gif'},
+      {title:'抓狂',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/62/crazya_thumb.gif'},
+      {title:'黑线',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/91/h_thumb.gif'},
+      {title:'阴险',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6d/yx_thumb.gif'},
+      {title:'怒骂',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/89/nm_thumb.gif'},
+      {title:'心',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/40/hearta_thumb.gif'},
+      {title:'伤心',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/ea/unheart.gif'},
+      {title:'ok',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/d6/ok_thumb.gif'},
+      {title:'耶',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/d9/ye_thumb.gif'},
+      {title:'good',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/d8/good_thumb.gif'},
+      {title:'不要',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/c7/no_thumb.gif'},
+      {title:'赞',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/d0/z2_thumb.gif'},
+      {title:'来',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/40/come_thumb.gif'},
+      {title:'弱',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/d8/sad_thumb.gif'},
+      {title:'蜡烛',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/91/lazu_thumb.gif'},
+      {title:'蛋糕',content:'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/6a/cake.gif'}
+    ]
+  }, {
+    title: '文字',
+    type: 'text',
+    list: [
+      {title:'开心',content:'(^_^)'},
+      {title:'受不了',content:'(>_<)'},
+      {title:'鄙视',content:'(¬､¬)'},
+      {title:'难过',content:'(*>﹏<*)'},
+      {title:'可爱',content:'(｡◕‿◕｡)'},
+      {title:'无奈',content:'╮(╯_╰)╭'},
+      {title:'惊喜',content:'╰(*°▽°*)╯'},
+      {title:'听音乐',content:'♪(^∇^*)'},
+      {title:'害羞',content:'(✿◡‿◡)'},
+      {title:'睡啦',content:'(∪｡∪)..zzZ'},
+      {title:'臭美',content:'(o≖◡≖)'},
+      {title:'流汗',content:'(ーー゛)'}
+    ]
+  }];
+e.create();
+```
 
 #### ajax回调
 ```javascript

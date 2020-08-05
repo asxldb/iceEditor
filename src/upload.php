@@ -12,7 +12,7 @@
 
 /*********************** 基本参数 ***********************/
 header("Content-Type: text/html; charset=utf-8");
-header("X-Powered-By: icePHP");
+header("X-Powered-By: uz");
 date_default_timezone_set('PRC');
 session_start();
 /*********************** 基本参数 ***********************/
