@@ -1,13 +1,15 @@
 <?php
 /**
- +------------------------------------------------------------------------------------+
- + 功能：iceEditor编辑器上传
- +------------------------------------------------------------------------------------+
- + 作者：ice
- + 官方：www.iceui.net
- + 时间：2018-04-25
- + 版权声明：该版权完全归官方www.iceui.net所有，可转载和个人学习使用，但请务必保留版权
- +------------------------------------------------------------------------------------+
+ *------------------------------------------------------------------------------------*
+ * 功能：iceEditor编辑器上传
+ *------------------------------------------------------------------------------------*
+ * 作者：ice
+ * 官方：www.iceui.net
+ * 时间：2018-04-25
+ * 更新时间：时间：2020-10-22
+ * 更新内容：增加网络图片下载到本地
+ * 版权声明：该版权完全归官方www.iceui.net所有，可转载和个人学习使用，但请务必保留版权
+ *------------------------------------------------------------------------------------*
  */
 
 /*********************** 基本参数 ***********************/
@@ -29,9 +31,7 @@ $dir = isset($_SESSION['upload_path'])?$_SESSION['upload_path']:'/upload/files/'
 $field = 'file';
 
 //支持上传的文件格式
-$type = ['jpg','jpeg','png','gif','bmp','exe','flv','swf','mkv','avi','rm','rmvb','mpeg','mpg','ogg','ogv','mov',
-		 'wmv','mp4','webm','mp3','wav','mid','rar','zip','tar','gz','7z','bz2','cab','iso','chm','doc','docx',
-		 'xls','xlsx','ppt','pptx','pdf','txt','md','xml','torrent'];
+$type = ['jpg','jpeg','png','gif','bmp','exe','flv','swf','mkv','avi','rm','rmvb','mpeg','mpg','ogg','ogv','mov','wmv','mp4','webm','mp3','wav','mid','rar','zip','tar','gz','7z','bz2','cab','iso','chm','doc','docx','xls','xlsx','ppt','pptx','pdf','txt','md','xml','torrent'];
 
 //上传文件存储大小的限制-默认30M
 $maxSize = 30 * 102400;
@@ -51,9 +51,29 @@ if (!file_exists(URL.$dir)) {
 }
 
 //定义用来返回上传文件成功后的URL连接的JSON格式
-$url = array();
+$url = [];
 
-// print_r($_FILES);
+//网络图片下载到本地
+if(isset($_POST['iceEditor-img']) && $_POST['iceEditor-img']){
+	$fileExt = file_ext($_POST['iceEditor-img']);
+	$img = file_get_contents($_POST['iceEditor-img']);
+
+	$info = pathinfo($_POST['iceEditor-img']);
+
+	$name = file_rename($info['basename']);
+
+	//判断文件类型是否允许上传
+	if (!$img || !in_array($fileExt,['jpg','jpeg','png','gif','bmp'])){
+		$url['error'] = 1;
+		$url['url'] = '';
+	}
+	if(file_put_contents(URL.$dir.$name, $img)){
+		$url['error'] = 0;
+		$url['url'] = $dir.$name;
+	}
+	echo json_encode($url);
+	exit;
+}
 
 //获取批量上传的数组键值，也就是说上传的文件数量
 $keys = array_keys($_FILES[$field]['name']);
@@ -71,6 +91,52 @@ foreach ($keys as $key){
 		$ext = explode('/',$fileType);
 		$name .= '.'.$ext[1];
 	}
+
+	//获取文件的名称
+	$fileName = file_pre($name);
+
+	//获取文件的后缀名称
+	$fileExt = file_ext($name);
+
+	//重命名
+	$name = file_rename($name,$key);
+
+	$error = 0;
+
+	//判断文件类型是否允许上传
+	if (!in_array($fileExt,$type)){
+		$error = '该文件类型禁止上传';
+	}
+
+	//判断文件大小是否超出
+	if ($_FILES[$field]["size"][$key] > $maxSize){
+		$error = '该文件太大禁止上传';
+	}
+
+	//获取文件的完整url地址
+	$url[$key]['url'] = $dir.$name;
+	$url[$key]['name'] = $fileName.'.'.$fileExt;
+	$url[$key]['error'] = $error;
+	if(!$error){
+		//将上传的文件移动到指定目录
+		move_uploaded_file($_FILES[$field]["tmp_name"][$key],URL.$dir.$name);
+	}
+}
+
+//获取文件后缀名，不包含 .
+function file_ext($name) {
+	return strtolower(substr(strrchr($name, '.'), 1));
+}
+
+//获取文件的前缀，不包含 .
+function file_pre($name) {
+	return substr($name, 0, strrpos($name, '.'));
+}
+
+//重命名
+function file_rename($name,$key=1) {
+
+	global $rename;
 
 	//获取文件的名称
 	$fileName = file_pre($name);
@@ -97,39 +163,8 @@ foreach ($keys as $key){
 			$name = $rename.'.'.$fileExt;
 		}
 	}
-
-	$error = 0;
-
-	//判断文件类型是否允许上传
-	if (!in_array($fileExt,$type)){
-		$error = '该文件类型禁止上传';
-	}
-
-	//判断文件大小是否超出
-	if ($_FILES[$field]["size"][$key] > $maxSize){
-		$error = '该文件太大禁止上传';
-	}
-
-	//获取文件的完整url地址
-	$url[$key]['url'] = $dir.$name;
-	$url[$key]['name'] = $fileName.'.'.$fileExt;
-	$url[$key]['error'] = $error;
-	if(!$error){
-		//将上传的文件移动到指定目录
-		move_uploaded_file($_FILES[$field]["tmp_name"][$key],URL.$dir.$name);
-	}
+	return $name;
 }
-
-//获取文件后缀名，不包含 .
-function file_ext($filename) {
-	return strtolower(substr(strrchr($filename, '.'), 1));
-}
-
-//获取文件的前缀，不包含 .
-function file_pre($filename) {
-	return substr($filename, 0, strrpos($filename, '.'));
-}
-
 //输出最终数据;
 echo json_encode($url);
 exit;

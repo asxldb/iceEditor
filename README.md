@@ -16,7 +16,24 @@ iceEditor官方群：324415936
 + 简约的唯美设计，简洁、极速
 
 #### 最新更新
+# iceEditor v1.1.8
++ **2020-10-23**
++ [新增] filterTag标签过滤
++ [新增] filterStyle样式过滤
++ [新增] word粘贴
++ [新增] 富文本粘贴
++ [新增] 粘贴图片
++ [新增] 粘贴时，网络图片下载到本地
++ [新增] 上传图片和附件的监听方法
 # iceEditor v1.1.7
++ **2020-09-25**
++ [修复] line的样式问题
++ **2020-09-09**
++ [增加] 增加禁用输入方法
++ [增加] 增加启用输入方法
++ [增加] 增加监听输入方法
++ **2020-09-02**
++ [修复] ajax进度条报错问题
 + **2020-07-27**
 + [修改] 将所有的语义标签、文字大小、颜色、粗体、删除线、斜体……全部改为span标签，使用style定义样式
 + [增加] 将当前光标位置样式，同步到菜单高亮上
@@ -25,39 +42,6 @@ iceEditor官方群：324415936
 + **2020-07-25**
 + [修复] 源码视图下，p标签错位
 + [修复] 源码视图下，粘贴出现多余的p标签
-# iceEditor v1.1.6
-+ **2020-07-02**
-+ [优化] 鼠标经过功能按钮，弹出文字提示
-+ [优化] 在某些框架中，与本编辑器样式冲突问题
-+ **2020-06-28**
-+ [调整] 创建按钮的架构，提高了加载速度
-+ [优化] 手机端弹窗错位
-+ [优化] 手机端自适应
-+ **2020-06-22**
-+ [修复] 上传网络图片链接width和height为0的BUG
-+ **2020-06-20**
-+ [修复] textarea内容中的pre代码格式
-+ [新增] 新增代码语言（扩展）
-+ **2020-06-17**
-+ [优化] 添加a链接，可选择新窗口打开
-+ [优化] 下拉菜单，点击exec命令菜单后，弹窗消失
-+ [优化] 新增pre标签下粘贴代码
-+ [优化] 查看源码所造成的一些BUG
-+ **2020-06-16**
-+ [优化] 编辑内容时，结尾出现多余的p标签
-+ [修复] 处于源码视图中，获取到的textarea内容被转义BUG
-+ [修复] setValue设置编辑器内容时，如果容器使用的textarea，给它赋值
-+ **2020-06-02**
-+ [优化] 点击下拉菜单，菜单随之关闭
-+ [优化] 删除线功能，取消strike标签（html5已经废弃），改为style样式控制
-+ [修改] 创建链接弹窗方式
-+ [修改] 添加音乐弹窗方式
-# iceEditor v1.1.5
-+ **2020-05-29**
-+ [新增] QQ、微信……截图直接粘贴功能，默认开启此功能，不需要可关闭，配置项：screenshot
-+ [新增] 截图直接上传至服务器功能，默认开启此功能，不需要可关闭，配置项：screenshotUpload
-+ [重写] 图片、附件上传的核心方法，由iframe方式改为ajax
-+ [修改] upload.php文件，支持存储截图的blob对象
 + [查看其它更新](https://www.iceui.net/iceEditor/update.html) 
 
 #### 提示
@@ -75,6 +59,8 @@ iceEditor.js的引用禁止放在head标签内，请尽量放在body中或body�
 
 #### 使用
 ```html
+<!-- 也可以直接使用textarea，放在form表单中可以直接提交 -->
+<!-- <textarea id="editor" name="content"> 欢迎使用iceEditor富文本编辑器 </textarea> -->
 <div id="editor"> 欢迎使用iceEditor富文本编辑器 </div>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/iceuinet/iceEditor/src/iceEditor.min.js"></script>
 ```
@@ -142,9 +128,16 @@ e.create();
 
 #### 禁用编辑器
 ```javascript
+//初始化过程中的禁用方式
 var e = new ice.editor('content');
 e.disabled=true;
 e.create();
+
+//通过方法禁用输入
+e.inputDisabled();
+
+//取消禁用，恢复输入状态
+e.inputEnable();
 ```
 
 #### 获取内容
@@ -152,6 +145,7 @@ e.create();
 var e = new ice.editor('content');
 console.log(e.getHTML());  //获取HTML格式内容
 console.log(e.getText());  //获取Text格式内容
+console.log(e.getValue());  //同getHTML，只是为了好记
 ```
 
 #### 设置内容
@@ -166,6 +160,17 @@ var e = new ice.editor('content');
 e.addValue('hello world！');
 ```
 
+#### 监听输入内容
+```javascript
+var e = new ice.editor('content');
+//html：html格式
+//text：纯文本格式
+e.inputCallback(function(html,text){
+  //console.log(this.getHTML()) 方法内的this为e对象，html等价于this.getHTML()
+  console.log(html);
+});
+```
+
 #### 禁用截图粘贴功能
 ```javascript
 var e = new ice.editor('content');
@@ -177,6 +182,18 @@ e.screenshot=false;
 //禁用后，将默认以base64格式显示图片
 var e = new ice.editor('content');
 e.screenshotUpload=false;
+```
+
+#### 网络图片自动下载到本地
+```javascript
+var e = new ice.editor('content');
+e.imgAutoUpload=false;
+```
+
+#### 开启富文本粘贴，可粘贴Word
+```javascript
+var e = new ice.editor('content');
+e.pasteText=true;
 ```
 
 #### 配置插入表情的表情列表
@@ -273,19 +290,32 @@ e.create();
 var e = new ice.editor('content');
 
 //ajax的xhr设置
-e.ajax.xhr = function(xhr,json,e){};  
+e.ajax.xhr = function(xhr){};  
 
 //ajax超时回调   
-e.ajax.timeout = function(xhr,json,e){};
+e.ajax.timeout = function(xhr){};
 
 //ajax成功回调
-e.ajax.success = function(res,xhr,json,e){};
+e.ajax.success = function(res,xhr){};
 
 //ajax失败回调
-e.ajax.error = function(res,xhr,json,e){};
+e.ajax.error = function(res,xhr){};
+
+//ajax不管成功失败都调用
+e.ajax.complete = function(res,xhr){};
 
 //ajax进度回调
-e.ajax.progress = function(percent,evt,xhr,json,e){};
+e.ajax.progress = function(percent,evt,xhr){};
+
+//上传附件
+e.filesUpload.success = function(res){};      //成功
+e.filesUpload.error = function(res,xhr){};    //失败
+e.filesUpload.complete = function(res,xhr){}; //不管成功失败都调用
+
+//上传图片
+e.imgUpload.success = function(res){};      //成功
+e.imgUpload.error = function(res,xhr){};    //失败
+e.imgUpload.complete = function(res,xhr){}; //不管成功失败都调用
 ```
 
 #### 插件开发
