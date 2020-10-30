@@ -762,15 +762,13 @@ ice.editor.prototype.menuHTML=function(){
 									z.filesUpload.complete(res[f],res);
 									alert(res[f].error);
 								}else{
-									var p = z.c('p');
 									var a = z.c("a");
 									a.href = res[f].url;
 									a.className = 'download';
 									a.download = res[f].name;
 									a.innerText = res[f].name;
 									a.target = '_blank';
-									p.appendChild(a);
-									z.setHTML(p,true);
+									z.setHTML(a,true);
 									z.filesUpload.success(res[f],res);
 									z.filesUpload.complete(res[f],res);
 								}
@@ -828,11 +826,9 @@ ice.editor.prototype.menuHTML=function(){
 									z.imgUpload.complete(res[f],res);
 									alert(res[f].error);
 								}else{
-									var p = z.c('p');
 									var a = z.c('img');
 									a.src = res[f].url;
-									p.appendChild(a);
-									z.setHTML(p,true);
+									z.setHTML(a,true);
 									z.imgUpload.success(res[f],res);
 									z.imgUpload.complete(res[f],res);
 								}
