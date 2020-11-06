@@ -17,6 +17,10 @@ iceEditor官方群：324415936
 
 #### 最新更新
 # iceEditor v1.1.8
++ **2020-11-06**
++ [新增] 富文本粘贴按钮
++ [修复] 粘贴时或者文件上传造成多余的p、br标签BUG
++ [修复] 分割线样式消失BUG
 + **2020-10-23**
 + [新增] filterTag标签过滤
 + [新增] filterStyle样式过滤
@@ -193,7 +197,7 @@ e.imgAutoUpload=false;
 #### 开启富文本粘贴，可粘贴Word
 ```javascript
 var e = new ice.editor('content');
-e.pasteText=true;
+e.pasteText=false;
 ```
 
 #### 配置插入表情的表情列表

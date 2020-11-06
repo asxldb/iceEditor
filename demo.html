@@ -12,12 +12,14 @@
 <div style="text-align: center;font-size:15px;margin-bottom: 20px;">官方：<a href="https://www.iceui.net/iceEditor.html" target="_blank">https://www.iceui.net/iceEditor.html</a></div>
 <div id="content"></div>
 <script type="text/JavaScript" src="src/iceEditor.js"></script>
+<script type="text/JavaScript" src="html-docx.js"></script>
 <script>
  //自定义编辑器菜单
 var e = new ice.editor("content");
-e.uploadUrl="src/upload.php";
+e.uploadUrl = "src/upload.php";
+e.pasteText = false;
 e.screenshot = true;
-e.screenshotUpload = false;
+e.screenshotUpload = true;
 //edit.menu=['fontSize','foreColor','bold','italic','underline','strikeThrough','line','justifyLeft','justifyCenter','justifyRight','line','table','insertImage','video'];
 
 
@@ -106,9 +108,18 @@ e.plugin({
 	}
 });
 e.create();
-e.setValue(`<p>本实例js脚本：</p><p><br></p>
-<pre class="iceCode:js">var str = 'hello world';<br>console.log(str);<br></pre>
-<p><br></p><p><font color="#00b050" size="2">//实例化（传递一个id）</font></p><p><font color="#595959" size="2">var edit = new ice.editor("content");</font></p><p><br></p><p><font color="#00b050" size="2">//自定义编辑器工具栏菜单（默认展示所有功能）</font></p><p><font color="#595959" size="2">edit.menu=["fontSize","foreColor","bold","italic","underline","strikeThrough","line","justifyLeft","justifyCenter","justifyRight","line","table","insertImage"];</font></p><p><br></p><p><font color="#00b050" size="2">//编辑器创建</font></p><p><font color="#595959" size="2">edit.create();</font></p>`);
+e.setValue(`<p>本实例js脚本：</p>
+	<p></p>
+	<pre class="iceCode:js">var str = 'hello world';<br>console.log(str);<br></pre>
+	<p></p>
+	<p><font color="#00b050" size="2">//实例化（传递一个id）</font></p>
+	<p><font color="#595959" size="2">var edit = new ice.editor("content");</font></p>
+	<p></p>
+	<p><font color="#00b050" size="2">//自定义编辑器工具栏菜单（默认展示所有功能）</font></p>
+	<p><font color="#595959" size="2">edit.menu=["fontSize","foreColor","bold","italic","underline","strikeThrough","line","justifyLeft","justifyCenter","justifyRight","line","table","insertImage"];</font></p>
+	<p></p>
+	<p><font color="#00b050" size="2">//编辑器创建</font></p>
+	<p><font color="#595959" size="2">edit.create();</font></p>`);
 </script>
 
 </body>
