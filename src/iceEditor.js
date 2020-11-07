@@ -1390,8 +1390,9 @@ ice.editor.prototype.paste=function(){
 
 		//下载网络图片到本地
 		if(_z.imgAutoUpload){
+			var text = _z.getHTML();
 			text.replace(/<img .*?src="(.*?)".*?>/gi,function(a,b=''){
-				//这里必须使用闭包，因为使用了异步，判断c是否为网络图片
+				//这里必须使用闭包，因为使用了异步，判断b是否为网络图片
 				(function(a,b){
 					_z.ajax({
 						url:_z.uploadUrl,
