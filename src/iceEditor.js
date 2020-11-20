@@ -6,7 +6,7 @@
  * MIT License By www.iceui.net
  + 作者：ice
  + 官方：www.iceui.net
- + 时间：2020-11-07
+ + 时间：2020-11-20
  +------------------------------------------------------------------------------------+
  + 版权声明：该版权完全归iceUI官方所有，可转载使用和学习，但请务必保留版权信息
  +------------------------------------------------------------------------------------+
@@ -613,8 +613,6 @@ ice.editor.prototype.menuHTML=function(){
 	this.createMenu({title:'全选',name:'selectAll',data:'selectAll',icon:'empty'});
 	//查看源码
 	this.createMenu({title:'查看源码',name:'code',icon:'code',data:'code'});
-	//隔线
-	this.createMenu({title:'隔线',name:'line',css:'iceEditor-line'});
 
 	//插入表情
 	var html='<div class="iceEditor-face"><div class="iceEditor-faceTitle">';
@@ -936,6 +934,12 @@ ice.editor.prototype.menuFormat=function() {
 	this.tool.appendChild(ul);
 	//添加菜单
 	for(var i=0;i<this.menu.length;i++){
+		if(this.menu[i]=='line'){ //分割线
+			var line = _z.c('li');
+			line.className='iceEditor-line';
+			ul.appendChild(line);
+			continue;
+		}
 		ul.appendChild(this.menuList[this.menu[i]]);
 		if(this.menuList[this.menu[i]].success){
 			this.menuList[this.menu[i]].success(this.menuList[this.menu[i]],_z);
@@ -1004,7 +1008,7 @@ ice.editor.prototype.menuAction=function() {
 						var pre = _z.d.body.getElementsByTagName('pre');
 						for(var s=0;s<pre.length;s++) pre[s].innerHTML = pre[s].innerHTML.replace(/\n/g,"<br>");
 					}
-				break;
+					break;
 					//最大化
 					case 'max':
 					var webHeight = window.innerHeight; //页面视口高度
@@ -1044,7 +1048,7 @@ ice.editor.prototype.menuAction=function() {
 					}else{
 						_z.w.document.execCommand(b[0], false, null);
 					}
-					_z.range.getRangeAt(0).collapse();
+					//_z.range.getRangeAt(0).collapse(); //取消选中状态
 				}
 				return false;
 			}
@@ -1315,16 +1319,17 @@ ice.editor.prototype.paste=function(){
 		if (!_z.isIE())e.preventDefault();
 		var clip = (window.clipboardData || e.clipboardData || e.originalEvent.clipboardData);
 		//获取粘贴板数据
-		var text = _z.pasteText && clip.getData('Text').length?clip.getData('Text'):(clip.getData('text/html').length?clip.getData('text/html'):clip.getData('Text'));
+		var text = clip.getData('Text');
+		var str = _z.pasteText && text.length?text:(clip.getData('text/html').length?clip.getData('text/html'):text);
 		var htmlContent = clip.getData('text/html')?true:false;
 		//富文本粘贴模式开启状态下
 		if(htmlContent && !_z.pasteText){
 			//复制过来的数据有些情况会被转义，需要再次转义回来，单双引号全部转为单引号比较可靠
-			text = text.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&nbsp;/g," ").replace(/&#39;/g,"'").replace(/&quot;/g,"'");
+			str = str.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&nbsp;/g," ").replace(/&#39;/g,"'").replace(/&quot;/g,"'");
 		}
 
-		//截图粘贴功能
-		if(_z.screenshot){
+		//截图粘贴功能 判断是否开启，判断是否在pre标签中
+		if(_z.screenshot && !_z.inNodeParent(_z.range.getRangeAt(0).endContainer,'pre')){
 			if (clip){
 				//ie11没有items
 				var blob = clip.items?(clip.items[0].type.indexOf("image") !== -1 ? clip.items[0].getAsFile():0):0;
@@ -1340,16 +1345,17 @@ ice.editor.prototype.paste=function(){
 			}
 			getBase64();
 		}
-		if(!text.length) return;
+		if(!str.length) return;
 		//源码模式下直接纯文本粘贴
 		if(_z.code){
 			_z.setText(text);
 			return;
 		}
 
-		var t = text.replace(/[\r|\n]+/g,"\n").split("\n");
+		var t = str.replace(/[\r|\n]+/g,"\n").split("\n");
 		//判断光标是否在pre标签中
 		if(_z.inNodeParent(_z.range.getRangeAt(0).endContainer,'pre')){
+			var t = text.replace(/[\r|\n]+/g,"\n").split("\n");
 			for(var i=0;i<t.length;i++){
 				t[i] = _z.toText(t[i]);
 			}
@@ -1358,7 +1364,7 @@ ice.editor.prototype.paste=function(){
 		}
 
 		if(_z.pasteText && t.length==1){
-			_z.setText(text);
+			_z.setText(str);
 			return;
 		}
 
@@ -1371,27 +1377,27 @@ ice.editor.prototype.paste=function(){
 			}
 		}else{
 			//过滤word
-			text = _z.pasteWord(text);
-			text = _z.formatHTML(text);
+			str = _z.pasteWord(str);
+			str = _z.formatHTML(str);
 			//过滤HTML
-			text = _z.pasteHTML(text);
+			str = _z.pasteHTML(str);
 			//格式化HTML
-			text = _z.formatHTML(text);
-			_z.setText(text,true);
+			str = _z.formatHTML(str);
+			_z.setText(str,true);
 		}
 		//处理冗余标签
-		var html = _z.getHTML();
-		_z.d.body.innerHTML=html;
-		html = _z.getHTML();
-		html = html.replace(/<p><\/p>/gi,'')
+		str = _z.getHTML();
+		_z.d.body.innerHTML=str;
+		str = _z.getHTML();
+		str = str.replace(/<p><\/p>/gi,'')
 			.replace(/<\/p><br>/gi,'')
 			.replace(/<(span|font|p|b|i|u|s)[^>]*>(<(?!img)[^>]*>)*<\/\1>/gi,'');
-		_z.d.body.innerHTML=html;
+		_z.d.body.innerHTML=str;
 
 		//下载网络图片到本地
 		if(_z.imgAutoUpload){
-			var text = _z.getHTML();
-			text.replace(/<img .*?src="(.*?)".*?>/gi,function(a,b=''){
+			var str = _z.getHTML();
+			str.replace(/<img .*?src="(.*?)".*?>/gi,function(a,b=''){
 				//这里必须使用闭包，因为使用了异步，判断b是否为网络图片
 				(function(a,b){
 					_z.ajax({
@@ -1399,8 +1405,8 @@ ice.editor.prototype.paste=function(){
 						data: {'iceEditor-img':b},
 						success: function (res) {
 							if(res && !res.error){
-								text = text.replace(new RegExp(b,'gi'),res.url);
-								_z.d.body.innerHTML=text;
+								str = str.replace(new RegExp(b,'gi'),res.url);
+								_z.d.body.innerHTML=str;
 								_z.imgUpload.success(res);
 								_z.imgUpload.complete(res);
 							}else{
